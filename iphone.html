@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <meta charset="utf-8">
+        <title>Iphone Layout Calculator</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+        <style>
+            td { 
+                padding: 5px;
+            }
+        </style>
+        <!-- Latest compiled and minified JavaScript -->
+    </head>
+    <body>
+        <div class="navbar navbar-inverse" style="
+             height: 10px;
+             ">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Iphone Layout Calculator</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+
+                </ul>
+
+            </div>
+        </div>
+        <table border="1">
+            <tr>
+                <td>Width of Object : <input type='number' size=4 min="0" max="9999"   placeholder="Width" id='width' ></td>
+                <td>Height of Object : <input type='number' size=4  min="0" max="9999"  placeholder="height" id='height' onkeyup="Calc()"></td>
+                <td> Choose Device : 
+                    <select id='phone' onchange="Calc()">
+                        <option value="3">Iphone 3/3GS (320x480)</option>
+                        <option value="4">Iphone 4/4S (320x480)</option>
+                        <option value="5">Iphone 5/5S/5C (320x568)</option>
+                        <option value="6">Iphone 6 (375x667)</option>
+                        <option value="6p">Iphone 6 Plus (414x736)</option>
+                    </select>
+                </td>
+                <td>
+                    <input type='checkbox' size=4  id='aspectratio' value="true" > Maintain Aspect Ratio with </td>
+                <td>
+                    <label>
+                        <input type="radio" name="whattokeep" id="chb1" value="width" checked="checked" onchange="Calc()" disabled="disabled" />No Scaling
+                    </label>
+                    <label>
+                        <input type="radio" name="whattokeep" id="chb2" value="height" onchange="Calc()" disabled="disabled" />Scaling 
+                    </label> </td>
+            </tr>
+        </table>
+        <table border="1">
+            <tr>
+                <td><b> For Device </b></td><td><b>Width in Points</b></td><td><b>Height in Points</b></td><td></td><td><b>Width in Pixels</b></td><td><b>Height in Pixels</b></td>
+            </tr>
+
+            <tr>
+                <td>For Iphone 3/3GS </td><td><input type="text" id="i3w" disabled="true" readonly="true"   ></td><td><input type="text" id="i3h" disabled="true" readonly="true"   ></td><td></td><td><input type="text" id="i3wp" disabled="true" readonly="true"   ></td><td><input type="text" id="i3hp" disabled="true" readonly="true"   ></td>
+            </tr>
+
+            <tr>
+                <td>For Iphone 4/4S </td><td><input type="text" id="i4w" disabled="true" readonly="true"   ></td><td><input type="text" id="i4h" disabled="true" readonly="true"   ></td><td></td><td><input type="text" id="i4wp" disabled="true" readonly="true"   ></td><td><input type="text" id="i4hp" disabled="true" readonly="true"   ></td>
+            </tr>
+
+            <tr>
+                <td>For Iphone 5/5S/5C</td><td><input type="text" id="i5w" disabled="true" readonly="true" ></td><td><input type="text" id="i5h" disabled="true" readonly="true"   ></td><td></td><td><input type="text" id="i5wp" disabled="true" readonly="true"   ></td><td><input type="text" id="i5hp" disabled="true" readonly="true"   ></td>
+            </tr>
+
+            <tr>
+                <td>For Iphone 6</td><td><input type="text" id="i6w" disabled="true" readonly="true"  ></td><td><input type="text" id="i6h" disabled="true" readonly="true"   ></td><td></td><td><input type="text" id="i6wp" disabled="true" readonly="true"   ></td><td><input type="text" id="i6hp" disabled="true" readonly="true"   ></td>
+            </tr>
+
+            <tr>
+                <td>For Iphone 6+</td><td><input type="text" id="i6pw" disabled="true" readonly="true"  ></td><td><input type="text" id="i6ph" disabled="true" readonly="true"   ></td><td></td><td><input type="text" id="i6pwp" disabled="true" readonly="true"   ></td><td><input type="text" id="i6php" disabled="true" readonly="true"   ></td>
+            </tr>
+            <br>
+        </table>
+        <br>
+        <input type="file" onchange="previewFile()" accept="image/*"  multiple = "multiple" draggable="draggable"/>
+        <br>
+        <div id='imagecontainer'>
+            <img src="" width="25%"  alt="Image preview..."/>
+        </div>
+        <input type="button" id="convertbutton" value="Convert.." class="btn btn-success" />
+    </body>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    
+    <script type="text/javascript">
+            var res = [];
+
+            res.i3 = {};
+            res.i3.x = 1;
+            //res.i3gs = {};
+            res.i3.widthPT = 320;
+            res.i3.heightPT = 480;
+            //res.i3.widthPX = 320;
+            //res.i3.heightPX = 480;
+            //res.i3gs = res.i3;
+
+
+            res.i4 = {};
+            res.i4.x = 2;
+            res.i4s = {};
+            //res.i4.widthPX = 640;
+            //res.i4.heightPX = 960;
+            res.i4.widthPT = 320;
+            res.i4.heightPT = 480;
+            //res.i4s = res.i4;
+
+            res.i5 = {};
+            res.i5.x = 2;
+            res.i5s = {};
+            res.i5c = {};
+            //res.i5.widthPX = 640;
+            //res.i5.heightPX = 1136;
+            res.i5.widthPT = 320;
+            res.i5.heightPT = 568;
+            //res.i5s = res.i5;
+            //res.i5c = res.i5;
+
+            res.i6 = {};
+            res.i6.x = 2;
+            res.i6.widthPT = 375;
+            res.i6.heightPT = 667;
+            //res.i6.widthPX = 750;
+            //res.i6.heightPX = 1334;
+
+            res.i6p = {};
+            res.i6p.x = 3;
+            res.i6p.widthPT = 414;
+            res.i6p.heightPT = 736;
+            //res.i6p.widthPX = 1242;
+            //res.i6p.heightPX = 2208;
+            
+            function Calc() {
+                var aspectratio = $('#aspectratio').is(':checked');
+                var width = $('#width').val();
+                var height = $('#height').val();
+                var phone = $('#phone').val();
+                var whichtokeep = $('input[name="whattokeep"]:checked').val();
+                if (aspectratio === true && whichtokeep === "width") {
+                    $('#i3w').val((width / res["i" + phone].widthPT) * res.i3.widthPT);
+                    $('#i3h').val((width / res["i" + phone].widthPT) * res.i3.widthPT * height / width);
+                    $('#i3wp').val((width / res["i" + phone].widthPT) * res.i3.widthPT * res.i3.x);
+                    $('#i3hp').val((width / res["i" + phone].widthPT) * res.i3.widthPT * height / width * res.i3.x);
+                    $('#i4w').val((width / res["i" + phone].widthPT) * res.i4.widthPT);
+                    $('#i4h').val((width / res["i" + phone].widthPT) * res.i4.widthPT * height / width);
+                    $('#i4wp').val((width / res["i" + phone].widthPT) * res.i4.widthPT * res.i4.x);
+                    $('#i4hp').val((width / res["i" + phone].widthPT) * res.i4.widthPT * height / width * res.i4.x);
+                    $('#i5w').val((width / res["i" + phone].widthPT) * res.i5.widthPT);
+                    $('#i5h').val((width / res["i" + phone].widthPT) * res.i5.widthPT * height / width);
+                    $('#i5wp').val((width / res["i" + phone].widthPT) * res.i5.widthPT * res.i5.x);
+                    $('#i5hp').val((width / res["i" + phone].widthPT) * res.i5.widthPT * height / width * res.i5.x);
+                    $('#i6w').val((width / res["i" + phone].widthPT) * res.i6.widthPT);
+                    $('#i6h').val((width / res["i" + phone].widthPT) * res.i6.widthPT * height / width);
+                    $('#i6wp').val((width / res["i" + phone].widthPT) * res.i6.widthPT * res.i6.x);
+                    $('#i6hp').val((width / res["i" + phone].widthPT) * res.i6.widthPT * height / width * res.i6.x);
+                    $('#i6pw').val((width / res["i" + phone].widthPT) * res.i6p.widthPT);
+                    $('#i6ph').val((width / res["i" + phone].widthPT) * res.i6p.widthPT * height / width);
+                    $('#i6pwp').val((width / res["i" + phone].widthPT) * res.i6p.widthPT * res.i6p.x);
+                    $('#i6php').val((width / res["i" + phone].widthPT) * res.i6p.widthPT * height / width * res.i6p.x);
+                } else if (aspectratio === true && whichtokeep === "height")
+                {
+                    $('#i3w').val((width / res["i" + phone].heightPT) * res.i3.heightPT);
+                    $('#i3h').val((width / res["i" + phone].heightPT) * res.i3.heightPT * height / width);
+                    $('#i3wp').val((width / res["i" + phone].heightPT) * res.i3.heightPT * res.i3.x);
+                    $('#i3hp').val((width / res["i" + phone].heightPT) * res.i3.heightPT * height / width * res.i3.x);
+                    $('#i4w').val((width / res["i" + phone].heightPT) * res.i4.heightPT);
+                    $('#i4h').val((width / res["i" + phone].heightPT) * res.i4.heightPT * height / width);
+                    $('#i4wp').val((width / res["i" + phone].heightPT) * res.i4.heightPT * res.i4.x);
+                    $('#i4hp').val((width / res["i" + phone].heightPT) * res.i4.heightPT * height / width * res.i4.x);
+                    $('#i5w').val((width / res["i" + phone].heightPT) * res.i5.heightPT);
+                    $('#i5h').val((width / res["i" + phone].heightPT) * res.i5.heightPT * height / width);
+                    $('#i5wp').val((width / res["i" + phone].heightPT) * res.i5.heightPT * res.i5.x);
+                    $('#i5hp').val((width / res["i" + phone].heightPT) * res.i5.heightPT * height / width * res.i5.x);
+                    $('#i6w').val((width / res["i" + phone].heightPT) * res.i6.heightPT);
+                    $('#i6h').val((width / res["i" + phone].heightPT) * res.i6.heightPT * height / width);
+                    $('#i6wp').val((width / res["i" + phone].heightPT) * res.i6.heightPT * res.i6.x);
+                    $('#i6hp').val((width / res["i" + phone].heightPT) * res.i6.heightPT * height / width * res.i6.x);
+                    $('#i6pw').val((width / res["i" + phone].heightPT) * res.i6p.heightPT);
+                    $('#i6ph').val((width / res["i" + phone].heightPT) * res.i6p.heightPT * height / width);
+                    $('#i6pwp').val((width / res["i" + phone].heightPT) * res.i6p.heightPT * res.i6p.x);
+                    $('#i6php').val((width / res["i" + phone].heightPT) * res.i6p.heightPT * height / width * res.i6p.x);
+                }
+                else if (aspectratio === false)
+                {
+                    $('#i3w').val((width / res["i" + phone].widthPT) * res.i3.widthPT);
+                    $('#i3h').val((height / res["i" + phone].heightPT) * res.i3.heightPT);
+                    $('#i3wp').val((width / res["i" + phone].widthPT) * res.i3.widthPT * res.i3.x);
+                    $('#i3hp').val((height / res["i" + phone].heightPT) * res.i3.heightPT * res.i3.x);
+                    $('#i4w').val((width / res["i" + phone].widthPT) * res.i4.widthPT);
+                    $('#i4h').val((height / res["i" + phone].heightPT) * res.i4.heightPT);
+                    $('#i4wp').val((width / res["i" + phone].widthPT) * res.i4.widthPT * res.i4.x);
+                    $('#i4hp').val((height / res["i" + phone].heightPT) * res.i4.heightPT * res.i4.x);
+                    $('#i5w').val((width / res["i" + phone].widthPT) * res.i5.widthPT);
+                    $('#i5h').val((height / res["i" + phone].heightPT) * res.i5.heightPT);
+                    $('#i5wp').val((width / res["i" + phone].widthPT) * res.i5.widthPT * res.i5.x);
+                    $('#i5hp').val((height / res["i" + phone].heightPT) * res.i5.heightPT * res.i5.x);
+                    $('#i6w').val((width / res["i" + phone].widthPT) * res.i6.widthPT);
+                    $('#i6h').val((height / res["i" + phone].heightPT) * res.i6.heightPT);
+                    $('#i6wp').val((width / res["i" + phone].widthPT) * res.i6.widthPT * res.i6.x);
+                    $('#i6hp').val((height / res["i" + phone].heightPT) * res.i6.heightPT * res.i6.x);
+                    $('#i6pw').val((width / res["i" + phone].widthPT) * res.i6p.widthPT);
+                    $('#i6ph').val((height / res["i" + phone].heightPT) * res.i6p.heightPT);
+                    $('#i6pwp').val((width / res["i" + phone].widthPT) * res.i6p.widthPT * res.i6p.x);
+                    $('#i6php').val((height / res["i" + phone].heightPT) * res.i6p.heightPT * res.i6p.x);
+                }
+            }
+            $('#width').change(Calc);
+            $('#height').change(Calc);
+            
+            $('#convertbutton').click(function () {
+
+                res.r1x = $('#i3wp').val();
+                res.r1y = $('#i3hp').val();
+                res.r2x = $('#i4wp').val();
+                res.r2y = $('#i4hp').val();
+                res.r3x = $('#i5wp').val();
+                res.r3y = $('#i5hp').val();
+                res.r4x = $('#i6wp').val();
+                res.r4y = $('#i6hp').val();
+                res.r5x = $('#i6pwp').val();
+                res.r5y = $('#i6php').val();
+
+                var Obj = document.querySelector('img');
+                var Obj1= new Image();
+                var Obj2= new Image();
+                var Obj3= new Image();
+                var Obj4= new Image();
+                var Obj5= new Image();
+                
+                Obj1.src = Obj.src;
+                Obj2.src = Obj.src;
+                Obj3.src = Obj.src;
+                Obj4.src = Obj.src;
+                Obj5.src = Obj.src;
+                
+                Obj1.height = res.r1x;
+                Obj1.style.height = res.r1x;
+                Obj1.width = res.r1y;
+                Obj1.style.height = res.r1y;
+                
+                Obj2.height = res.r2x;
+                Obj2.style.height = res.r2x;
+                Obj2.width = res.r2y;
+                Obj2.style.height = res.r2y;
+                
+                Obj3.height = res.r3x;
+                Obj3.style.height = res.r3x;
+                Obj3.width = res.r3y;
+                Obj3.style.height = res.r3y;
+                
+                Obj4.height = res.r4x;
+                Obj4.style.height = res.r4x;
+                Obj4.width = res.r4y;
+                Obj4.style.height = res.r4y;
+                
+                Obj5.height = res.r5x;
+                Obj5.style.height = res.r5x;
+                Obj5.width = res.r5y;
+                Obj5.style.height = res.r5y;
+                
+                $('#imagecontainer').html(" ");
+                $('#imagecontainer').append(Obj1);
+                $('#imagecontainer').append(Obj2);
+                $('#imagecontainer').append(Obj3);
+                $('#imagecontainer').append(Obj4);
+                $('#imagecontainer').append(Obj5);
+            });
+            $(document).ready(function () {
+            });
+            function switchaspect() {
+                if (this.checked) {
+                    $("#chb1").removeAttr("disabled");
+                    $("#chb2").removeAttr("disabled");
+                } else {
+                    $("#chb1").attr("disabled", true);
+                    $("#chb2").attr("disabled", true);
+                }
+                Calc();
+            }
+            $('#aspectratio').change(switchaspect);
+            function previewFile() {
+                var preview = document.querySelector('img'); //selects the query named img
+                var file = document.querySelector('input[type=file]').files[0]; //sames as here
+                var reader = new FileReader();
+                reader.onloadend = function () {
+                    preview.src = reader.result;
+                };
+
+                if (file) {
+                    reader.readAsDataURL(file); //reads the data as a URL
+                } else {
+                    preview.src = "";
+                }
+            }
+
+            previewFile();
+    </script>
+</html>
