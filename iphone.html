@@ -9,8 +9,16 @@
         <!-- Optional theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
         <style>
+            canvas{
+                border: 1px solid black;
+            }
             td { 
                 padding: 5px;
+            }
+            #download {
+                cursor:pointer;
+                color:#000;
+                padding:3px;
             }
         </style>
         <!-- Latest compiled and minified JavaScript -->
@@ -36,7 +44,7 @@
         </div>
         <table border="1">
             <tr>
-                <td>Width of Object : <input type='number' size=4 min="0" max="9999"   placeholder="Width" id='width' ></td>
+                <td>Width of Object : <input type='number' size=4 min="0" max="9999"   placeholder="Width" id='width' onkeyup="Calc()"></td>
                 <td>Height of Object : <input type='number' size=4  min="0" max="9999"  placeholder="height" id='height' onkeyup="Calc()"></td>
                 <td> Choose Device : 
                     <select id='phone' onchange="Calc()">
@@ -85,15 +93,17 @@
             <br>
         </table>
         <br>
-        <input type="file" onchange="previewFile()" accept="image/*"  multiple = "multiple" draggable="draggable"/>
-        <br>
+        <input type="file" onchange="previewFile()" accept="image/*" id="fs"  multiple = "multiple" draggable="draggable"/>
+        <img src="" width="25%"  alt="Image preview..." hidden="hidden"/>
         <div id='imagecontainer'>
-            <img src="" width="25%"  alt="Image preview..."/>
+
         </div>
-        <input type="button" id="convertbutton" value="Convert.." class="btn btn-success" />
+
     </body>
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-    
+    <script src="./jszip.min.js"></script>
+    <script src="./filesaver.min.js"></script>
+
     <script type="text/javascript">
             var res = [];
 
@@ -140,7 +150,7 @@
             res.i6p.heightPT = 736;
             //res.i6p.widthPX = 1242;
             //res.i6p.heightPX = 2208;
-            
+
             function Calc() {
                 var aspectratio = $('#aspectratio').is(':checked');
                 var width = $('#width').val();
@@ -214,11 +224,48 @@
                     $('#i6pwp').val((width / res["i" + phone].widthPT) * res.i6p.widthPT * res.i6p.x);
                     $('#i6php').val((height / res["i" + phone].heightPT) * res.i6p.heightPT * res.i6p.x);
                 }
+                if (height > 1) {
+                    resizeImage();
+                }
             }
             $('#width').change(Calc);
             $('#height').change(Calc);
-            
-            $('#convertbutton').click(function () {
+
+            function createCanvasContext(width, height)
+            {
+                var canvas = document.createElement("canvas");
+                canvas.height = height;
+                canvas.width = width;
+                var context = canvas.getContext('2d');
+                $('#imagecontainer').append(canvas);
+                $('#imagecontainer').append(" ");
+                return context;
+            }
+
+            function download() {
+                var dt1 = $('canvas')[0].toDataURL("image/png");
+                var dt2 = $('canvas')[1].toDataURL("image/png");
+                var dt3 = $('canvas')[2].toDataURL("image/png");
+                var dt4 = $('canvas')[3].toDataURL("image/png");
+                var dt5 = $('canvas')[4].toDataURL("image/png");
+
+                var zip = new JSZip();
+                var filename = $('input[type=file]').val().replace(/C:\\fakepath\\/i, '');
+                filename = filename.substring(0, filename.length - 4);
+
+                zip.file(filename + ".png", dt1.substring(22), {base64: true});
+                zip.file(filename + "~4@2x.png", dt2.substring(22), {base64: true});
+                zip.file(filename + "~5@2x.png", dt3.substring(22), {base64: true});
+                zip.file(filename + "~6@2x.png", dt4.substring(22), {base64: true});
+                zip.file(filename + "@3x.png", dt5.substring(22), {base64: true});
+
+                var content = zip.generate({type: "blob"});
+                saveAs(content, "images.zip");
+
+                //this.href = dt5; //this may not work in the future..
+            }
+
+            function resizeImage() {
 
                 res.r1x = $('#i3wp').val();
                 res.r1y = $('#i3hp').val();
@@ -231,51 +278,25 @@
                 res.r5x = $('#i6pwp').val();
                 res.r5y = $('#i6php').val();
 
-                var Obj = document.querySelector('img');
-                var Obj1= new Image();
-                var Obj2= new Image();
-                var Obj3= new Image();
-                var Obj4= new Image();
-                var Obj5= new Image();
-                
-                Obj1.src = Obj.src;
-                Obj2.src = Obj.src;
-                Obj3.src = Obj.src;
-                Obj4.src = Obj.src;
-                Obj5.src = Obj.src;
-                
-                Obj1.height = res.r1x;
-                Obj1.style.height = res.r1x;
-                Obj1.width = res.r1y;
-                Obj1.style.height = res.r1y;
-                
-                Obj2.height = res.r2x;
-                Obj2.style.height = res.r2x;
-                Obj2.width = res.r2y;
-                Obj2.style.height = res.r2y;
-                
-                Obj3.height = res.r3x;
-                Obj3.style.height = res.r3x;
-                Obj3.width = res.r3y;
-                Obj3.style.height = res.r3y;
-                
-                Obj4.height = res.r4x;
-                Obj4.style.height = res.r4x;
-                Obj4.width = res.r4y;
-                Obj4.style.height = res.r4y;
-                
-                Obj5.height = res.r5x;
-                Obj5.style.height = res.r5x;
-                Obj5.width = res.r5y;
-                Obj5.style.height = res.r5y;
-                
-                $('#imagecontainer').html(" ");
-                $('#imagecontainer').append(Obj1);
-                $('#imagecontainer').append(Obj2);
-                $('#imagecontainer').append(Obj3);
-                $('#imagecontainer').append(Obj4);
-                $('#imagecontainer').append(Obj5);
-            });
+                var Obj = document.querySelector('img');//Obj is an image
+
+                $('#imagecontainer').html("<br><a id='download' class='btn btn-success' download='images.zip'>Download as Zip</a><br>");
+
+                var ctx1 = createCanvasContext(res.r1x, res.r1y);
+                var ctx2 = createCanvasContext(res.r2x, res.r2y);
+                var ctx3 = createCanvasContext(res.r3x, res.r3y);
+                var ctx4 = createCanvasContext(res.r4x, res.r4y);
+                var ctx5 = createCanvasContext(res.r5x, res.r5y);
+
+                ctx1.drawImage(Obj, 0, 0, res.r1x, res.r1y);
+                ctx2.drawImage(Obj, 0, 0, res.r2x, res.r2y);
+                ctx3.drawImage(Obj, 0, 0, res.r3x, res.r3y);
+                ctx4.drawImage(Obj, 0, 0, res.r4x, res.r4y);
+                ctx5.drawImage(Obj, 0, 0, res.r5x, res.r5y);
+
+                document.getElementById('download').addEventListener('click', download, false);
+            }
+
             $(document).ready(function () {
             });
             function switchaspect() {
@@ -295,6 +316,7 @@
                 var reader = new FileReader();
                 reader.onloadend = function () {
                     preview.src = reader.result;
+                    resizeImage();
                 };
 
                 if (file) {
@@ -303,7 +325,6 @@
                     preview.src = "";
                 }
             }
-
             previewFile();
     </script>
 </html>
