@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Iphone Layout Calculator</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+        <style>
+            canvas{
+                border: 1px solid black;
+            }
+            td { 
+                padding: 5px;
+            }
+            #download {
+                cursor:pointer;
+                color:#000;
+                padding:3px;
+            }
+            .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+                padding: 8px;
+                line-height: 1.42857143;
+                vertical-align: middle;
+                text-align: center;
+                border-top: 1px solid #ddd;
+            }
+            input[type="text"] {
+                text-align: center;
+            }
+        </style>
+        <!-- Latest compiled and minified JavaScript -->
+    </head>
+    <body>
+        <div class="navbar navbar-inverse" style="height: 10px;">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Iphone Layout Calculator</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+
+                </ul>
+
+            </div>
+        </div>
+        <table border="1"  class="table">
+            <tr class="navbar" style="background: #e7fed6;">
+                <td style="background: azure;">Width of Image : <input type='number' size=4 min="0" max="9999"   placeholder="Width" id='width' onkeyup="Calc()"></td>
+                <td style="background: azure;">Height of Image : <input type='number' size=4  min="0" max="9999"  placeholder="height" id='height' onkeyup="Calc()"></td>
+                <td>Choose Device:
+                    <select id='phone'  class="form" onchange="Calc()">
+                        <option value="3">Iphone 3/3GS (320x480)</option>
+                        <option value="4">Iphone 4/4S (320x480)</option>
+                        <option value="5">Iphone 5/5S/5C (320x568)</option>
+                        <option value="6">Iphone 6 (375x667)</option>
+                        <option value="6p">Iphone 6 Plus (414x736)</option>
+                    </select>
+                </td>
+                <td>
+                    <input type='checkbox'  id='aspectratio' value="true" > Maintain Aspect Ratio with 
+                </td>
+                <td>
+                    <label>
+                        <input type="radio" name="whattokeep" id="chb1" value="width" checked="checked" onchange="Calc()" disabled="disabled" />No Scaling
+                    </label>
+                    <label>
+                        <input type="radio" name="whattokeep" id="chb2" value="height" onchange="Calc()" disabled="disabled" />Scaling 
+                    </label> 
+                </td>
+                <td>
+                    <label>
+                        <input type="radio" name="round" id="round" value="round" checked="checked" onchange="Calc()"  />Round
+                    </label>
+                    <label>
+                        <input type="radio" name="round" id="exact" value="exact" onchange="Calc()"  />Exact
+                    </label> 
+                </td>
+            </tr>
+        </table ><table border="1" class="table" >
+            <tr>
+                <td rowspan="2" colspan="2"><b> For Device </b></td><td colspan="2"  style="background: azure;"><b>Points</b></td><td style="background: ghostwhite;" colspan="2"><b>Pixels</b></td>
+            </tr>
+            <tr>
+                <td style="background: azure;"><b>Width</b></td><td style="background: azure;"><b>Height</b></td><td style="background: ghostwhite;" ><b>Width</b></td><td style="background: ghostwhite;" ><b>Height</b></td>
+            </tr>
+
+            <tr>
+                <td><img src="./images/i3.jpg" width="40" height="40"></td><td>For Iphone 3/3GS </td><td style="background: azure;"><input type="text" id="i3w" disabled="true" readonly="true"   ></td><td style="background: azure;"><input type="text" id="i3h" disabled="true" readonly="true"   ></td><td style="background: ghostwhite;" ><input type="text" id="i3wp" disabled="true" readonly="true"   ></td><td style="background: ghostwhite;" ><input type="text" id="i3hp" disabled="true" readonly="true"   ></td>
+            </tr>
+
+            <tr>
+                <td><img src="./images/i4.ico" width="40" height="40"></td><td>For Iphone 4/4S </td><td style="background: azure;"><input type="text" id="i4w" disabled="true" readonly="true"   ></td><td style="background: azure;"><input type="text" id="i4h" disabled="true" readonly="true"   ></td><td style="background: ghostwhite;" ><input type="text" id="i4wp" disabled="true" readonly="true"   ></td><td style="background: ghostwhite;" ><input type="text" id="i4hp" disabled="true" readonly="true"   ></td>
+            </tr>
+
+            <tr>
+                <td><img src="./images/i5.png" width="40" height="40"></td><td>For Iphone 5/5S/5C</td><td style="background: azure;"><input type="text" id="i5w" disabled="true" readonly="true" ></td><td style="background: azure;"><input type="text" id="i5h" disabled="true" readonly="true"   ></td><td style="background: ghostwhite;" ><input type="text" id="i5wp" disabled="true" readonly="true"   ></td><td style="background: ghostwhite;" ><input type="text" id="i5hp" disabled="true" readonly="true"   ></td>
+            </tr>
+
+            <tr>
+                <td><img src="./images/i6.png" height="40"></td><td> For Iphone 6</td><td style="background: azure;"><input type="text" id="i6w" disabled="true" readonly="true"  ></td><td style="background: azure;"><input type="text" id="i6h" disabled="true" readonly="true"   ></td><td style="background: ghostwhite;" ><input type="text" id="i6wp" disabled="true" readonly="true"   ></td><td style="background: ghostwhite;" ><input type="text" id="i6hp" disabled="true" readonly="true"   ></td>
+            </tr>
+
+            <tr>
+                <td><img src="./images/i6p.png" height="40"></td><td> For Iphone 6+</td><td style="background: azure;"><input type="text" id="i6pw" disabled="true" readonly="true"  ></td><td style="background: azure;"><input type="text" id="i6ph" disabled="true" readonly="true"   ></td><td style="background: ghostwhite;" ><input type="text" id="i6pwp" disabled="true" readonly="true"   ></td><td style="background: ghostwhite;" ><input type="text" id="i6php" disabled="true" readonly="true"   ></td>
+            </tr>
+            <br>
+        </table>
+        <br>
+        <div class="container">
+            <input type="file" onchange="previewFile()" accept="image/*" id="fs"  multiple = "multiple" draggable="draggable"/>
+            <div hidden="hidden">
+                <img src="" width="25%" id="himage" hidden="hidden"/>
+            </div>
+        </div>
+        <div id='imagecontainer' >
+
+        </div>
+
+    </body>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="./jszip.min.js"></script>
+    <script src="./filesaver.min.js"></script>
+    <script type="text/javascript" src="./iphone.js"></script>
+</html>
