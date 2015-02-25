@@ -129,7 +129,7 @@ function Calc() {
         $('#i6pwp').val((width / res["i" + phone].widthPT) * res.i6p.widthPT * res.i6p.x);
         $('#i6php').val((height / res["i" + phone].heightPT) * res.i6p.heightPT * res.i6p.x);
     }
-    if (height >= 0 && width >= 0) {
+    if (height >= 1 && width >= 0) {
         resizeImage();
     }
     if (round === "true")
